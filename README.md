@@ -21,6 +21,18 @@ three axes:
 <!-- TODO: Add Colab badge after public release -->
 Open `notebooks/01_quickstart.ipynb` on Google Colab and *Run All*.
 
+## Notebooks
+
+- [`notebooks/01_quickstart.ipynb`](notebooks/01_quickstart.ipynb) —
+  end-to-end pipeline on a single voice segment. The shortest path
+  from raw audio to the three-axis metrics.
+- [`notebooks/02_paper_reproduction.ipynb`](notebooks/02_paper_reproduction.ipynb) —
+  batch pipeline over the five-recording corpus: per-segment metrics,
+  per-recording aggregation, type classification, and the three core
+  paper figures (radar, PCA biplot, decision flow). Recordings whose
+  audio is not on disk are skipped, so the notebook works on any
+  available subset.
+
 ## Run locally
 
 ```bash

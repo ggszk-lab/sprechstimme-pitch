@@ -19,6 +19,15 @@ reference implementation．
 <!-- TODO: 公開後に Colab badge を追加 -->
 `notebooks/01_quickstart.ipynb` を Colab で開いて Run All．
 
+## ノートブック
+
+- [`notebooks/01_quickstart.ipynb`](notebooks/01_quickstart.ipynb) —
+  単一セグメントでの end-to-end パイプライン．3 軸指標までの最短経路．
+- [`notebooks/02_paper_reproduction.ipynb`](notebooks/02_paper_reproduction.ipynb) —
+  5 録音コーパスでのバッチ処理：per-segment 指標 → per-recording 集約 → 型分類，
+  論文 1 主要 3 図（radar / PCA biplot / 型分類フロー）の出力．
+  音源がない録音は自動でスキップされるので部分集合でも動く．
+
 ## ローカルで動かす
 
 ```bash
