@@ -1,0 +1,57 @@
+# Audio files: never commit (legal + size)
+data/audio/*
+!data/audio/.gitkeep
+*.wav
+*.flac
+*.mp3
+*.m4a
+*.aac
+*.ogg
+*.aiff
+*.aif
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.tox/
+.coverage
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+uv.lock
+
+# Jupyter
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Local outputs (results regenerable from notebooks)
+03_results/exports/
+outputs/
+
+# Secrets
+.env
+.env.*
+!.env.example
