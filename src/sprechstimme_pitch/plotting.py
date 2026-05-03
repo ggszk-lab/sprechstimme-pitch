@@ -11,8 +11,29 @@ from matplotlib.patches import FancyBboxPatch
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
+from .metrics import (
+    THRESHOLD_CONTOUR_STD,
+    THRESHOLD_OFFSET_ABS_CENT,
+    classify_performance,
+)
 
-# Recording identification and styling
+__all__ = [
+    "RECORDINGS",
+    "COLOR_MAP",
+    "MARKER_MAP",
+    "RECORDING_LABELS",
+    "TYPE_COLOR",
+    "TYPE_LABEL",
+    "four_axes_normalize",
+    "plot_radar_chart",
+    "plot_pca_biplot",
+    "plot_type_classification_flow",
+]
+
+
+# Recording identification and styling.
+# These constants are tuned for the 5-recording paper-1 corpus; expand
+# them when extending the analysis to additional recordings.
 RECORDINGS = ['ath-1973', 'hul-2012', 'bou-1961', 'bou-1977', 'her-1991']
 
 COLOR_MAP = {
@@ -38,10 +59,6 @@ RECORDING_LABELS = {
     'bou-1977': 'Boulez (1977)',
     'her-1991': 'Heringer (1991)',
 }
-
-# Type classification thresholds
-THRESHOLD_CONTOUR_STD = 0.3
-THRESHOLD_OFFSET_ABS = 400  # cents
 
 TYPE_COLOR = {
     'score-faithful': '#4C9F70',
@@ -225,31 +242,6 @@ def plot_pca_biplot(
     return fig, ax
 
 
-def classify_performance_type(
-    register_offset_cent: float,
-    contour_std: float,
-) -> str:
-    """
-    Classify performance type based on thresholds.
-
-    Args:
-        register_offset_cent: median pitch offset in cents
-        contour_std: std of contour correlation across segments
-
-    Returns:
-        Type string: 'score-faithful', 'directed-recitation', or 'dynamic'.
-    """
-    abs_offset = abs(register_offset_cent) if not np.isnan(register_offset_cent) else 0
-    c_std = contour_std if not np.isnan(contour_std) else 0
-
-    if c_std > THRESHOLD_CONTOUR_STD:
-        return 'dynamic'
-    elif abs_offset > THRESHOLD_OFFSET_ABS:
-        return 'directed-recitation'
-    else:
-        return 'score-faithful'
-
-
 def plot_type_classification_flow(
     recordings_data: dict[str, tuple[float, float]],
     figsize: tuple[int, int] = (12, 6),
@@ -291,9 +283,11 @@ def plot_type_classification_flow(
         ax.text(pos[0], pos[1], label, ha='center', va='center', fontsize=10, fontweight='bold')
 
     draw_box(ax, nodes['start'], 'Start', 'lightgray')
-    draw_box(ax, nodes['contour_decision'], f'contour_std\n> {THRESHOLD_CONTOUR_STD}?', 'lightyellow')
+    contour_label = f'contour_std\n> {THRESHOLD_CONTOUR_STD}?'
+    draw_box(ax, nodes['contour_decision'], contour_label, 'lightyellow')
     draw_box(ax, nodes['dynamic'], 'Dynamic', TYPE_COLOR['dynamic'])
-    draw_box(ax, nodes['offset_decision'], f'|offset|\n> {THRESHOLD_OFFSET_ABS}c?', 'lightyellow')
+    offset_label = f'|offset|\n> {int(THRESHOLD_OFFSET_ABS_CENT)}c?'
+    draw_box(ax, nodes['offset_decision'], offset_label, 'lightyellow')
     draw_box(ax, nodes['directed'], 'Directed\nRecitation', TYPE_COLOR['directed-recitation'])
     draw_box(ax, nodes['faithful'], 'Score-\nFaithful', TYPE_COLOR['score-faithful'])
 
@@ -317,7 +311,7 @@ def plot_type_classification_flow(
 
     # Plot recordings on the result nodes
     for rec_id, (offset, c_std) in recordings_data.items():
-        rec_type = classify_performance_type(offset, c_std)
+        rec_type = classify_performance(offset, c_std)
         node_pos = nodes[
             'dynamic' if rec_type == 'dynamic'
             else 'directed' if rec_type == 'directed-recitation'

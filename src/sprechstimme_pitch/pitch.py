@@ -1,8 +1,27 @@
 """pYIN pitch tracking and reliability flagging.
 
-Provides a wrapper around librosa.pyin for tracking fundamental frequency
-with voicing confidence, and a flag function to mark unreliable pitch
-estimates based on voicing ratio, F0 variability, and octave/subharmonic errors.
+This module provides:
+
+- :func:`track_pitch`             — wrapper around ``librosa.pyin``.
+- :func:`note_voiced_ratio`       — fraction of voiced frames in a slice.
+- :func:`note_f0_iqr_cent`        — interquartile range of voiced f0
+  (in cents, relative to A4).
+- :func:`classify_pitch_class_error` — categorise a per-note error as
+  octave / fifth / within (subharmonic detection).
+- :func:`is_pyin_unreliable`      — combine the above into a boolean flag
+  with a human-readable reasons string.
+
+The reliability spec follows issue #12 in the research repository:
+a note is *unreliable* when **any** of these hold:
+
+1. ``voiced_ratio < voiced_ratio_threshold`` (default ``0.5``)
+2. ``f0_iqr_cent > f0_iqr_threshold_cent`` (default ``500``)
+3. The per-note error matches a subharmonic pitch-class
+   (``oct_1`` / ``oct_2`` / ``fifth_down`` / ``fifth_up``) within
+   ``pitch_class_error_tol_cent`` (default ``50``).
+
+The intent is to filter pYIN locking errors, not the performer's
+intentional musical deviation.
 """
 
 from __future__ import annotations
@@ -12,15 +31,40 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import stats
 
+__all__ = [
+    "PitchTrack",
+    "track_pitch",
+    "note_voiced_ratio",
+    "note_f0_iqr_cent",
+    "classify_pitch_class_error",
+    "is_pyin_unreliable",
+    "cent_to_hz",
+    "hz_to_cent",
+    "VOICED_RATIO_THRESHOLD",
+    "F0_IQR_THRESHOLD_CENT",
+    "PITCH_CLASS_ERROR_TOL_CENT",
+]
+
+
+VOICED_RATIO_THRESHOLD = 0.5
+F0_IQR_THRESHOLD_CENT = 500.0
+PITCH_CLASS_ERROR_TOL_CENT = 50.0
+
 
 @dataclass
 class PitchTrack:
-    """Results of pYIN pitch tracking.
+    """Output of :func:`track_pitch`.
 
-    Attributes:
-        f0_hz: fundamental frequency in Hz (may be NaN for unvoiced frames)
-        voiced_flag: binary voicing confidence (1.0 = voiced, 0.0 = unvoiced)
-        voiced_probs: probability of voicing per frame
+    All three arrays are aligned frame-by-frame.
+
+    Attributes
+    ----------
+    f0_hz
+        Fundamental frequency in Hz; ``NaN`` for unvoiced frames.
+    voiced_flag
+        ``1.0`` if voiced, ``0.0`` otherwise.
+    voiced_probs
+        Per-frame voicing probability.
     """
 
     f0_hz: np.ndarray
@@ -36,19 +80,9 @@ def track_pitch(
     frame_length: int = 2048,
     hop_length: int = 256,
 ) -> PitchTrack:
-    """
-    Track fundamental frequency using pYIN.
+    """Run ``librosa.pyin`` and wrap the output.
 
-    Args:
-        y: audio time series (mono)
-        sr: sample rate (Hz)
-        fmin: minimum frequency (Hz, default C3 = 130.8 Hz)
-        fmax: maximum frequency (Hz, default C5 = 523.3 Hz)
-        frame_length: FFT window length
-        hop_length: number of samples between successive frames
-
-    Returns:
-        PitchTrack with f0_hz, voiced_flag, voiced_probs.
+    Defaults match the paper-1 corpus configuration.
     """
     import librosa
 
@@ -60,76 +94,123 @@ def track_pitch(
         frame_length=frame_length,
         hop_length=hop_length,
     )
+    return PitchTrack(f0_hz=f0_hz, voiced_flag=voiced_flag, voiced_probs=voiced_probs)
 
-    return PitchTrack(
-        f0_hz=f0_hz,
-        voiced_flag=voiced_flag,
-        voiced_probs=voiced_probs,
-    )
+
+def note_voiced_ratio(voiced_flag: np.ndarray) -> float:
+    """Fraction of voiced frames within a note slice.
+
+    Returns ``NaN`` when the slice is empty.
+    """
+    voiced_flag = np.asarray(voiced_flag, dtype=float)
+    if voiced_flag.size == 0:
+        return float("nan")
+    return float(np.nanmean(voiced_flag))
+
+
+def note_f0_iqr_cent(f0_hz: np.ndarray, voiced_flag: np.ndarray) -> float:
+    """IQR of the voiced f0 within a note slice, expressed in cents.
+
+    Cents are computed relative to A4 (``440 Hz``); IQR is invariant to
+    the reference, so any consistent reference works.
+
+    Returns ``NaN`` when the slice has no voiced frames.
+    """
+    f0_hz = np.asarray(f0_hz, dtype=float)
+    voiced_flag = np.asarray(voiced_flag, dtype=float)
+    voiced = f0_hz[voiced_flag > 0.5]
+    voiced = voiced[~np.isnan(voiced) & (voiced > 0)]
+    if voiced.size == 0:
+        return float("nan")
+    cents = 1200.0 * np.log2(voiced / 440.0)
+    return float(stats.iqr(cents))
+
+
+def classify_pitch_class_error(
+    err_cent: float,
+    tol: float = PITCH_CLASS_ERROR_TOL_CENT,
+) -> str:
+    """Classify a per-note error into pYIN-typical subharmonic categories.
+
+    Returns one of:
+
+    - ``"oct_1"``      : ``|err_cent| ≈ 1200 ± tol``
+    - ``"oct_2"``      : ``|err_cent| ≈ 2400 ± tol``
+    - ``"fifth_down"`` : ``err_cent ≈ -700 ± tol``
+    - ``"fifth_up"``   : ``err_cent ≈ +700 ± tol``
+    - ``"within"``     : none of the above
+    - ``"nan"``        : ``err_cent`` is NaN
+    """
+    if err_cent is None or (isinstance(err_cent, float) and np.isnan(err_cent)):
+        return "nan"
+    if abs(err_cent + 700) <= tol:
+        return "fifth_down"
+    if abs(err_cent - 700) <= tol:
+        return "fifth_up"
+    abs_err = abs(err_cent)
+    for k in (1, 2):
+        if abs(abs_err - 1200 * k) <= tol:
+            return f"oct_{k}"
+    return "within"
 
 
 def is_pyin_unreliable(
-    f0_hz: np.ndarray,
-    voiced_flag: np.ndarray,
-    voiced_ratio_threshold: float = 0.5,
-    f0_iqr_threshold_cent: float = 500.0,
-    pitch_class_error_notes: list[str] | None = None,
-    abs_error_cent: float | None = None,
-    pitch_class_error_tol_cent: float = 50.0,
-) -> bool:
-    """
-    Flag a note's pitch estimate as unreliable based on pYIN diagnostics.
+    voiced_ratio: float,
+    f0_iqr_cent: float,
+    pitch_class_error: str,
+    *,
+    voiced_ratio_threshold: float = VOICED_RATIO_THRESHOLD,
+    f0_iqr_threshold_cent: float = F0_IQR_THRESHOLD_CENT,
+) -> tuple[bool, str]:
+    """Decide whether a note's pYIN estimate should be treated as unreliable.
 
-    A note is marked unreliable if ANY of these conditions hold:
+    Inputs are the precomputed scalar diagnostics for a single note
+    (use :func:`note_voiced_ratio`, :func:`note_f0_iqr_cent`,
+    :func:`classify_pitch_class_error` to derive them).
 
-    1. Voicing ratio (fraction of voiced frames) < voiced_ratio_threshold
-    2. IQR of voiced F0 > f0_iqr_threshold_cent
-    3. Error belongs to subharmonic/octave error pitch class (±1200/±2400/±700 ±tol)
+    Parameters
+    ----------
+    voiced_ratio
+        Fraction of voiced frames in the note. ``NaN`` is treated as
+        "no estimate" and flags the note as unreliable.
+    f0_iqr_cent
+        IQR of voiced f0 in cents.
+    pitch_class_error
+        Output of :func:`classify_pitch_class_error`.
 
-    Args:
-        f0_hz: pitch track for this note (Hz), may contain NaN
-        voiced_flag: voicing flags (0.0/1.0) for each frame
-        voiced_ratio_threshold: min voicing ratio to pass (default 0.5)
-        f0_iqr_threshold_cent: max IQR of F0 in cents (default 500)
-        pitch_class_error_notes: list of detected pitch-class error strings
-            (e.g. ['oct_1', 'fifth_down']), or None if no errors detected
-        abs_error_cent: absolute error for this note in cents, or None if NaN
-        pitch_class_error_tol_cent: tolerance for matching error patterns (cents)
-
-    Returns:
-        True if unreliable (any condition met), False otherwise.
+    Returns
+    -------
+    (is_unreliable, reasons)
+        ``reasons`` is a comma-separated string drawn from
+        ``{"no_estimate", "voiced_low", "iqr_high",
+        "pitch_class_<oct_1|oct_2|fifth_down|fifth_up>"}``,
+        empty when the note is reliable.
     """
     reasons: list[str] = []
 
-    # Condition 1: voiced ratio
-    voiced_ratio = float(np.nanmean(voiced_flag)) if voiced_flag.size > 0 else 0.0
-    if voiced_ratio < voiced_ratio_threshold:
-        reasons.append("voiced_low")
-
-    # Condition 2: F0 IQR
-    f0_voiced = f0_hz[voiced_flag > 0.5]
-    if f0_voiced.size > 0:
-        f0_cent = 1200.0 * np.log2(f0_voiced / 440.0)
-        iqr = float(stats.iqr(f0_cent, nan_policy="omit"))
-        if iqr > f0_iqr_threshold_cent:
+    if voiced_ratio is None or (isinstance(voiced_ratio, float) and np.isnan(voiced_ratio)):
+        reasons.append("no_estimate")
+    else:
+        if voiced_ratio < voiced_ratio_threshold:
+            reasons.append("voiced_low")
+        if (
+            f0_iqr_cent is not None
+            and not (isinstance(f0_iqr_cent, float) and np.isnan(f0_iqr_cent))
+            and f0_iqr_cent > f0_iqr_threshold_cent
+        ):
             reasons.append("iqr_high")
 
-    # Condition 3: pitch-class error (subharmonic/octave)
-    if pitch_class_error_notes is not None and abs_error_cent is not None:
-        subharmonic_errors = {"oct_1", "oct_2", "fifth_down", "fifth_up"}
-        for err in pitch_class_error_notes:
-            if err in subharmonic_errors:
-                reasons.append(f"pitch_class_{err}")
-                break  # Mark unreliable; don't list all errors
+    if pitch_class_error not in ("within", "nan", "", None):
+        reasons.append(f"pitch_class_{pitch_class_error}")
 
-    return len(reasons) > 0
+    return (len(reasons) > 0, ",".join(reasons))
 
 
 def cent_to_hz(cents: float, ref_hz: float = 440.0) -> float:
-    """Convert cents (relative to A4) to Hz."""
+    """Convert cents (relative to ``ref_hz``) to Hz."""
     return ref_hz * (2.0 ** (cents / 1200.0))
 
 
 def hz_to_cent(hz: float, ref_hz: float = 440.0) -> float:
-    """Convert Hz to cents (relative to A4)."""
+    """Convert Hz to cents (relative to ``ref_hz``)."""
     return 1200.0 * np.log2(hz / ref_hz)

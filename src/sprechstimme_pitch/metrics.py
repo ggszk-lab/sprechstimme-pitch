@@ -1,11 +1,14 @@
 """Three-axis metrics: register, range, contour decomposition.
 
-Decomposes the deviation of a performer's pitch from the score into
-three independent dimensions:
+Decomposes a performer's deviation from the score into three independent
+axes:
 
-- register (offset): overall pitch shift
-- range (compression): pitch span expansion/compression
-- contour (direction): adherence to pitch shape
+- **register** (offset)      — overall pitch shift, in cents
+- **range** (compression)    — ratio of pitch-spread (std obs / std score)
+- **contour** (direction)    — Spearman correlation of adjacent intervals
+
+Definitions follow ``register_normalized_metrics.ipynb`` in the original
+research repository.
 """
 
 from __future__ import annotations
@@ -15,16 +18,39 @@ from dataclasses import dataclass
 import numpy as np
 from scipy.stats import spearmanr
 
+__all__ = [
+    "ThreeAxisMetrics",
+    "compute_three_axis_metrics",
+    "aggregate_metrics",
+    "classify_performance",
+    "THRESHOLD_CONTOUR_STD",
+    "THRESHOLD_OFFSET_ABS_CENT",
+]
+
+
+# Type-classification thresholds (set from observed values across the
+# 5-recording paper-1 corpus; see decisions log in the research repository).
+THRESHOLD_CONTOUR_STD = 0.3
+THRESHOLD_OFFSET_ABS_CENT = 400.0
+
 
 @dataclass
 class ThreeAxisMetrics:
-    """Three-axis decomposition of pitch deviation.
+    """Three-axis decomposition of pitch deviation for one segment.
 
-    Attributes:
-        register_offset_cent: median pitch difference (estimate - score)
-        range_compression: ratio of observed to score pitch span
-        contour_correlation: Spearman correlation of adjacent pitch intervals
-        n_notes_used: number of notes included in calculation
+    Attributes
+    ----------
+    register_offset_cent
+        Median ``est - score`` over reliable notes.
+    range_compression
+        ``std(est) / std(score)`` over reliable notes (population std,
+        ``ddof=0``). NaN when ``n_notes_used`` < ``min_notes`` or when the
+        score has no spread.
+    contour_correlation
+        Spearman ρ of adjacent intervals (``np.diff``) of est vs. score.
+        NaN when either side has zero variance.
+    n_notes_used
+        Number of reliable notes (``unreliable_flags == False``) used.
     """
 
     register_offset_cent: float
@@ -33,66 +59,79 @@ class ThreeAxisMetrics:
     n_notes_used: int
 
 
+def _safe_std(xs: np.ndarray) -> float:
+    """Population std over non-NaN values; NaN if fewer than 2 valid points."""
+    xs = xs[~np.isnan(xs)]
+    if xs.size < 2:
+        return float("nan")
+    return float(np.std(xs, ddof=0))
+
+
 def compute_three_axis_metrics(
     est_cent: np.ndarray,
     score_cent: np.ndarray,
     unreliable_flags: np.ndarray | None = None,
     min_notes: int = 3,
 ) -> ThreeAxisMetrics:
+    """Compute the three-axis metrics for one segment.
+
+    Parameters
+    ----------
+    est_cent
+        Per-note observed pitch in cents.
+    score_cent
+        Per-note score pitch in cents.
+    unreliable_flags
+        Boolean array; ``True`` excludes the corresponding note from
+        all three calculations. ``None`` keeps every note.
+    min_notes
+        Minimum reliable notes required to compute ``range_compression``
+        and ``contour_correlation``. ``register_offset_cent`` requires
+        only one reliable note.
     """
-    Compute three-axis metrics for a voice segment.
+    est_cent = np.asarray(est_cent, dtype=float)
+    score_cent = np.asarray(score_cent, dtype=float)
+    if est_cent.shape != score_cent.shape:
+        raise ValueError(
+            f"shape mismatch: est_cent {est_cent.shape} vs score_cent {score_cent.shape}"
+        )
 
-    Args:
-        est_cent: observed pitch in cents (per note)
-        score_cent: score pitch in cents (per note)
-        unreliable_flags: boolean array (True = exclude from calculation),
-            e.g. from is_pyin_unreliable. If None, all notes are used.
-        min_notes: minimum number of reliable notes to compute range/contour
-            (register is computed if at least 1 note remains)
-
-    Returns:
-        ThreeAxisMetrics with register_offset_cent, range_compression,
-        contour_correlation, and n_notes_used.
-    """
-    if len(est_cent) != len(score_cent):
-        raise ValueError(f"mismatched lengths: {len(est_cent)} vs {len(score_cent)}")
-
-    # Apply unreliability filter
     if unreliable_flags is None:
-        mask = np.ones(len(est_cent), dtype=bool)
+        mask = np.ones(est_cent.shape, dtype=bool)
     else:
-        if len(unreliable_flags) != len(est_cent):
-            raise ValueError(f"unreliable_flags length mismatch: {len(unreliable_flags)}")
+        unreliable_flags = np.asarray(unreliable_flags, dtype=bool)
+        if unreliable_flags.shape != est_cent.shape:
+            raise ValueError(
+                f"unreliable_flags shape mismatch: {unreliable_flags.shape} vs {est_cent.shape}"
+            )
         mask = ~unreliable_flags
 
-    est_kept = est_cent[mask]
-    score_kept = score_cent[mask]
-    n_kept = len(est_kept)
+    valid = mask & ~np.isnan(est_cent) & ~np.isnan(score_cent)
+    est_kept = est_cent[valid]
+    score_kept = score_cent[valid]
+    n_kept = int(est_kept.size)
 
-    # Register: median offset (requires ≥1 note)
-    register_offset_cent = float('nan')
-    if n_kept >= 1:
-        register_offset_cent = float(np.nanmedian(est_kept - score_kept))
+    register_offset_cent = (
+        float(np.median(est_kept - score_kept)) if n_kept >= 1 else float("nan")
+    )
 
-    # Range: ratio of pitch spans (requires ≥min_notes)
-    range_compression = float('nan')
     if n_kept >= min_notes:
-        est_span = float(np.nanmax(est_kept) - np.nanmin(est_kept))
-        score_span = float(np.nanmax(score_kept) - np.nanmin(score_kept))
-        if score_span > 0:
-            range_compression = est_span / score_span
+        std_est = _safe_std(est_kept)
+        std_score = _safe_std(score_kept)
+        if np.isnan(std_score) or std_score == 0:
+            range_compression = float("nan")
         else:
-            range_compression = float('nan')
+            range_compression = std_est / std_score
+    else:
+        range_compression = float("nan")
 
-    # Contour: Spearman correlation of adjacent intervals (requires ≥min_notes+1)
-    contour_correlation = float('nan')
+    contour_correlation = float("nan")
     if n_kept >= min_notes:
-        # Adjacent pitch differences (intervals)
         est_intervals = np.diff(est_kept)
         score_intervals = np.diff(score_kept)
-        if len(est_intervals) > 0:
-            r, _ = spearmanr(est_intervals, score_intervals, nan_policy='propagate')
-            contour_correlation = float(r) if not np.isnan(r) else float('nan')
+        if est_intervals.size > 0 and np.std(est_intervals) > 0 and np.std(score_intervals) > 0:
+            rho, _ = spearmanr(est_intervals, score_intervals)
+            contour_correlation = float(rho) if not np.isnan(rho) else float("nan")
 
     return ThreeAxisMetrics(
         register_offset_cent=register_offset_cent,
@@ -104,68 +143,65 @@ def compute_three_axis_metrics(
 
 def aggregate_metrics(
     metrics_list: list[ThreeAxisMetrics],
-    agg_fn: str = 'median',
 ) -> dict[str, float]:
-    """
-    Aggregate per-segment metrics to per-recording level.
+    """Aggregate per-segment metrics to per-recording level.
 
-    Args:
-        metrics_list: list of ThreeAxisMetrics (one per segment)
-        agg_fn: 'median' or 'mean'
+    Returns a dict with:
 
-    Returns:
-        dict with keys like 'register_offset_cent', 'range_compression',
-        'contour_correlation_median', 'contour_correlation_std'
+    - ``register_offset_cent``         — median across segments
+    - ``range_compression``            — median across segments
+    - ``contour_correlation_median``   — median across segments
+    - ``contour_correlation_std``      — std across segments (used for
+      the dynamic-type axis)
     """
     if not metrics_list:
         raise ValueError("empty metrics list")
 
-    agg = np.median if agg_fn == 'median' else np.mean
-
-    register_values = [m.register_offset_cent for m in metrics_list]
-    range_values = [m.range_compression for m in metrics_list]
-    contour_values = [m.contour_correlation for m in metrics_list]
+    register_arr = np.array([m.register_offset_cent for m in metrics_list], dtype=float)
+    range_arr = np.array([m.range_compression for m in metrics_list], dtype=float)
+    contour_arr = np.array([m.contour_correlation for m in metrics_list], dtype=float)
 
     return {
-        'register_offset_cent': float(agg(np.array(register_values))),
-        'range_compression': float(agg(np.array(range_values))),
-        'contour_correlation_median': float(np.nanmedian(np.array(contour_values))),
-        'contour_correlation_std': float(np.nanstd(np.array(contour_values))),
+        "register_offset_cent": float(np.nanmedian(register_arr)),
+        "range_compression": float(np.nanmedian(range_arr)),
+        "contour_correlation_median": float(np.nanmedian(contour_arr)),
+        "contour_correlation_std": float(np.nanstd(contour_arr, ddof=0)),
     }
 
 
 def classify_performance(
     register_offset_cent: float,
-    contour_correlation: float,
-    register_threshold_cent: float = 400.0,
-    contour_threshold: float = 0.3,
+    contour_std: float,
+    *,
+    contour_std_threshold: float = THRESHOLD_CONTOUR_STD,
+    offset_abs_threshold_cent: float = THRESHOLD_OFFSET_ABS_CENT,
 ) -> str:
+    """Classify a recording into a performance type.
+
+    Decision order matches the original
+    ``performer_classification.ipynb`` flowchart:
+
+    1. ``contour_std > contour_std_threshold`` → ``'dynamic'``
+    2. else ``|register_offset| > offset_abs_threshold_cent`` →
+       ``'directed-recitation'``
+    3. else → ``'score-faithful'``
+
+    Parameters
+    ----------
+    register_offset_cent
+        Per-recording aggregate (``aggregate_metrics`` →
+        ``register_offset_cent``).
+    contour_std
+        Per-recording aggregate (``aggregate_metrics`` →
+        ``contour_correlation_std``).
     """
-    Classify a performance into a type based on three-axis thresholds.
-
-    Rough classification:
-    - 'score_faithful': register near zero, contour high
-    - 'directed_recitation': register large (speech-like), contour moderate
-    - 'dynamic': contour low (unstable/varied)
-
-    Args:
-        register_offset_cent: median pitch offset in cents
-        contour_correlation: Spearman correlation of pitch contour
-        register_threshold_cent: threshold for register classification
-        contour_threshold: threshold for contour stability
-
-    Returns:
-        Classification string.
-    """
-    abs_register = abs(register_offset_cent) if not np.isnan(register_offset_cent) else 0
-    has_large_register = abs_register > register_threshold_cent
-    has_stable_contour = (
-        not np.isnan(contour_correlation) and contour_correlation > contour_threshold
+    abs_offset = (
+        abs(register_offset_cent) if not np.isnan(register_offset_cent) else 0.0
     )
+    c_std = contour_std if not np.isnan(contour_std) else 0.0
 
-    if has_large_register:
-        return 'directed_recitation'
-    elif has_stable_contour:
-        return 'score_faithful'
-    else:
-        return 'dynamic'
+    if c_std > contour_std_threshold:
+        return "dynamic"
+    if abs_offset > offset_abs_threshold_cent:
+        return "directed-recitation"
+    return "score-faithful"

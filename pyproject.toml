@@ -53,3 +53,9 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# Notebooks: pre-import path manipulation and exploratory style are normal.
+"notebooks/*.ipynb" = ["E402", "F541", "W293"]
+# Plotting follows scikit-learn matrix-naming convention (X, X_std, X_pca).
+"src/sprechstimme_pitch/plotting.py" = ["N806"]

@@ -8,9 +8,15 @@ attempt full metrical alignment.
 from __future__ import annotations
 
 import csv
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+
+__all__ = [
+    "SegmentKey",
+    "ScoreEventKey",
+    "recompute_times",
+]
 
 
 @dataclass(frozen=True)
@@ -26,7 +32,7 @@ class ScoreEventKey:
     note_index: str
 
 
-def _read_csv(path: Path) -> Tuple[List[str], List[Dict[str, str]]]:
+def _read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
     """Read CSV file and return (fieldnames, rows)."""
     with path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
@@ -36,7 +42,7 @@ def _read_csv(path: Path) -> Tuple[List[str], List[Dict[str, str]]]:
         return list(reader.fieldnames), rows
 
 
-def _write_csv(path: Path, fieldnames: List[str], rows: Iterable[Dict[str, str]]) -> None:
+def _write_csv(path: Path, fieldnames: list[str], rows: Iterable[dict[str, str]]) -> None:
     """Write CSV file."""
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -62,10 +68,10 @@ def _fmt_seconds(value: float) -> str:
 
 def recompute_times(
     *,
-    segments_rows: List[Dict[str, str]],
-    score_events_rows: List[Dict[str, str]],
-    map_rows: List[Dict[str, str]],
-) -> List[Dict[str, str]]:
+    segments_rows: list[dict[str, str]],
+    score_events_rows: list[dict[str, str]],
+    map_rows: list[dict[str, str]],
+) -> list[dict[str, str]]:
     """
     Recompute per-note start/end seconds in segment_score_map.
 
@@ -84,7 +90,7 @@ def recompute_times(
         ValueError: if required columns are missing or values are invalid.
     """
     # Build segment lookup: (recording_id, segment_id) → (piece_id, start_s, end_s)
-    segments: Dict[SegmentKey, Tuple[str, float, float]] = {}
+    segments: dict[SegmentKey, tuple[str, float, float]] = {}
     for row in segments_rows:
         key = SegmentKey(row["recording_id"], row["segment_id"])
         segments[key] = (
@@ -94,18 +100,18 @@ def recompute_times(
         )
 
     # Build duration lookup: (piece_id, bar_number, note_index) → duration_qn
-    durations: Dict[ScoreEventKey, float] = {}
+    durations: dict[ScoreEventKey, float] = {}
     for row in score_events_rows:
         key = ScoreEventKey(row["piece_id"], row["bar_number"], row["note_index"])
         durations[key] = _to_float(row["duration_qn"], what=f"score_events.duration_qn {key}")
 
     # Group mapping rows by segment
-    grouped: Dict[SegmentKey, List[Dict[str, str]]] = {}
+    grouped: dict[SegmentKey, list[dict[str, str]]] = {}
     for row in map_rows:
         skey = SegmentKey(row["recording_id"], row["segment_id"])
         grouped.setdefault(skey, []).append(row)
 
-    updated_rows: List[Dict[str, str]] = []
+    updated_rows: list[dict[str, str]] = []
 
     for skey, rows in grouped.items():
         if skey not in segments:
@@ -119,7 +125,7 @@ def recompute_times(
         rows_sorted = sorted(rows, key=lambda r: (int(r["bar_number"]), int(r["note_index"])))
 
         # Collect duration weights
-        weights: List[float] = []
+        weights: list[float] = []
         for r in rows_sorted:
             ekey = ScoreEventKey(piece_id, r["bar_number"], r["note_index"])
             if ekey not in durations:
