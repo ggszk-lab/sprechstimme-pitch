@@ -30,9 +30,9 @@ AUDIO_DIR = REPO_ROOT / "data" / "audio"
 ARCHIVE_ITEM = "SCHONBERGPierrotLunaire-NEWTRANSFER"
 ARCHIVE_URL = f"https://archive.org/details/{ARCHIVE_ITEM}"
 
-# TODO: Confirm exact track filenames on archive.org and pin them here.
-# For paper 1, only No. 7 is needed; full-album fetch is optional.
-TRACK_NO_7_FILENAME: str | None = None  # e.g. "07_Eine_blasse_Wascherin.flac"
+# Track 07: "Der kranke Mond" (The Sick Moon)
+# Available in MP3 and OGG; using MP3 for broader compatibility
+TRACK_NO_7_FILENAME: str = "07. Der kranke Mond (The Sick Moon).mp3"
 
 
 CONFIRMATION_BANNER = """\
