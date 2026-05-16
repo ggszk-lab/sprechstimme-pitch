@@ -10,7 +10,7 @@ reference implementation．
 - **range（compression）**: 楽譜上の音高変動幅に対する圧縮／拡張
 - **contour（direction）**: 楽譜の音高輪郭への追従度（score-informed Spearman）
 
-> **Status**: 公開準備中（論文 1 採択後に public 化予定）．
+> **Status**: 公開準備中．第147回 SIGMUS（情報処理学会 音楽情報科学研究会，2026-08-31〜09-02）での論文 1 発表時に public 化する予定．
 
 [English README](README.md)
 
@@ -31,7 +31,7 @@ reference implementation．
 ## ローカルで動かす
 
 ```bash
-git clone https://github.com/<user>/sprechstimme-pitch.git
+git clone https://github.com/ggszk-lab/sprechstimme-pitch.git
 cd sprechstimme-pitch
 uv sync                                    # 依存解決
 python scripts/fetch_audio.py              # archive.org から音源取得
@@ -53,7 +53,7 @@ EU・日本では隣接権が 2011 年に失効済み（PD 同等）．
 
 ## 引用
 
-<!-- TODO: 採択後に DOI と BibTeX を追加 -->
+<!-- TODO: SIGMUS 2026 発表後に引用情報・BibTeX を追加 -->
 
 ## ライセンス
 

@@ -11,8 +11,9 @@ three axes:
 - **range** (compression) — compression / expansion of pitch span
 - **contour** (direction) — score-informed Spearman correlation of pitch shape
 
-> **Status**: Pre-release. The repository is private until the companion
-> paper is accepted. Please contact the author before redistributing.
+> **Status**: Pre-release. This repository will be made public when the
+> companion paper is presented at IPSJ SIGMUS (147th meeting, 2026-08-31).
+> Until then, please contact the author before redistributing.
 
 [日本語版 README](README.ja.md)
 
@@ -36,7 +37,7 @@ Open `notebooks/01_quickstart.ipynb` on Google Colab and *Run All*.
 ## Run locally
 
 ```bash
-git clone https://github.com/<user>/sprechstimme-pitch.git
+git clone https://github.com/ggszk-lab/sprechstimme-pitch.git
 cd sprechstimme-pitch
 uv sync                                 # install dependencies
 python scripts/fetch_audio.py           # fetch audio from archive.org
@@ -61,7 +62,7 @@ See [LEGAL_NOTICE.md](LEGAL_NOTICE.md) before running the fetch script.
 
 ## Citation
 
-<!-- TODO: Add DOI and BibTeX after acceptance -->
+<!-- TODO: Add citation and BibTeX after the SIGMUS 2026 presentation -->
 
 ## License
 
