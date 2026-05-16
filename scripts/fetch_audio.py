@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from urllib.parse import quote
 from urllib.request import urlopen
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -32,7 +33,7 @@ ARCHIVE_URL = f"https://archive.org/details/{ARCHIVE_ITEM}"
 
 # Track 07: "Der kranke Mond" (The Sick Moon)
 # Available in MP3 and OGG; using MP3 for broader compatibility
-TRACK_NO_7_FILENAME: str = "07. Der kranke Mond (The Sick Moon).mp3"
+TRACK_NO_7_FILENAME: str = "07.DerKrankeMondtheSickMoon.mp3"
 
 
 CONFIRMATION_BANNER = """\
@@ -95,7 +96,7 @@ def main() -> int:
         )
         return 2
 
-    track_url = f"https://archive.org/download/{ARCHIVE_ITEM}/{TRACK_NO_7_FILENAME}"
+    track_url = f"https://archive.org/download/{ARCHIVE_ITEM}/{quote(TRACK_NO_7_FILENAME)}"
     dest = AUDIO_DIR / TRACK_NO_7_FILENAME
     download(track_url, dest)
     print("Done.")
