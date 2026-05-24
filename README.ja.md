@@ -10,7 +10,7 @@ reference implementation．
 - **range（compression）**: 楽譜上の音高変動幅に対する圧縮／拡張
 - **contour（direction）**: 楽譜の音高輪郭への追従度（score-informed Spearman）
 
-> **Status**: 公開準備中．第147回 SIGMUS（情報処理学会 音楽情報科学研究会，2026-08-31〜09-02）での論文 1 発表時に public 化する予定．
+> **Status**: 公開準備中．日本音楽知覚認知学会 秋季研究発表会 2026（2026-11 中旬予測）での論文 1 発表時に public 化する予定．
 
 [English README](README.md)
 
@@ -53,7 +53,7 @@ EU・日本では隣接権が 2011 年に失効済み（PD 同等）．
 
 ## 引用
 
-<!-- TODO: SIGMUS 2026 発表後に引用情報・BibTeX を追加 -->
+<!-- TODO: JSMPC 秋季 2026 発表後に引用情報・BibTeX を追加 -->
 
 ## ライセンス
 

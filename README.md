@@ -12,7 +12,8 @@ three axes:
 - **contour** (direction) — score-informed Spearman correlation of pitch shape
 
 > **Status**: Pre-release. This repository will be made public when the
-> companion paper is presented at IPSJ SIGMUS (147th meeting, 2026-08-31).
+> companion paper is presented at the Fall Meeting of the Japanese Society
+> for Music Perception and Cognition (JSMPC), expected mid-November 2026.
 > Until then, please contact the author before redistributing.
 
 [日本語版 README](README.ja.md)
@@ -62,7 +63,7 @@ See [LEGAL_NOTICE.md](LEGAL_NOTICE.md) before running the fetch script.
 
 ## Citation
 
-<!-- TODO: Add citation and BibTeX after the SIGMUS 2026 presentation -->
+<!-- TODO: Add citation and BibTeX after the JSMPC Fall 2026 presentation -->
 
 ## License
 
