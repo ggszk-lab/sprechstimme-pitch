@@ -32,6 +32,18 @@ notebook = [
     "jupyterlab>=4.0",
     "nbconvert>=7.0",
 ]
+# Demucs vocals/accompaniment separation. Recommended for any recording
+# with audible piano accompaniment in the analyzed segments (i.e. all
+# Pierrot lunaire No. 7 voice segments). Adds torch (~1 GB) as a transitive
+# dependency; install only when needed.
+separation = [
+    "demucs>=4.0",
+    # Recent torchaudio (>=2.8) routes WAV save through a separate
+    # `torchcodec` package that demucs 4.x does not pull in. Pin below
+    # that boundary until demucs publishes a torchcodec-aware release.
+    "torch<2.8",
+    "torchaudio<2.8",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.6",
