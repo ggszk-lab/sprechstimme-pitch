@@ -179,6 +179,11 @@ means reliable. This makes per-corpus filter audits cheap.
 
 `segment_score_map.csv` lists, for each `(recording_id, segment_id)`
 pair, the score events covered by that segment in performance order.
+Two alignment strategies are available, depending on how strongly the
+performer's note durations deviate from the score.
+
+### 5.1 Duration-weighted division — `alignment.recompute_times`
+
 The wall-clock time stamps for each note are derived from a simple
 duration-weighted division of the segment's total span:
 
@@ -186,14 +191,58 @@ duration-weighted division of the segment's total span:
 note_span_s = segment_span_s * (note.duration_qn / sum(duration_qn))
 ```
 
-This is implemented in `alignment.recompute_times`. It is intentionally
-lightweight for the pilot corpus; a fuller metrical alignment is out of
-scope for paper 1.
+This is the default strategy used by the paper-1 corpus
+(`ath-1973`, `hul-2012`, `bou-1961`, `bou-1977`, `her-1991`). It is
+intentionally lightweight and works well when the performer's relative
+note durations stay close to the score's notated values.
 
 The fields `start_s` / `end_s` for the *segment* are annotated by hand
 in `segments.csv`; the per-note `start_s` / `end_s` in
 `segment_score_map.csv` are then computed from those segment boundaries
 plus the score's `duration_qn`.
+
+### 5.2 f0 × score DP auto-alignment — `alignment.auto_align_dtw`
+
+Speech-extreme Sprechstimme delivery can break the proportional
+assumption. The Stiedry-Wagner 1940 demo recording is an extreme case:
+its first note of m5 lasts roughly 2.5× longer than the proportional
+split would assign, so the rest of the segment's windows shift by
+about one note and end up measuring the wrong pitch.
+
+`auto_align_dtw` solves this by consuming the per-frame f0 trace
+together with the score and computing the *optimal monotonic
+segmentation* of frames onto notes by 1-D dynamic programming. The
+per-frame cost is
+
+```
+cost(m, j) = min(|obs_cent[j] - notated_cent[m]|, max_cost_cent)   # if reliable
+           = neutral_cost_cent                                      # otherwise
+```
+
+plus a quadratic per-note duration prior
+
+```
+prior(m) = lambda_dur * (L_m - E_m)^2 / E_m
+```
+
+where `E_m` is the expected note length in frames derived from
+`notated_dur_qn` and `L_m` is the assigned length. The prior keeps
+assignments near the score's notated durations while still allowing
+rubato. Defaults (`max_cost_cent=1200`, `neutral_cost_cent=300`,
+`lambda_dur=500`) are calibrated on the Stiedry-Wagner 1940 demo.
+
+The per-note `start_s` / `end_s` rows for `sch-1940-sti` in
+`segment_score_map.csv` are the result of this DP alignment
+(`notes` column = `auto-aligned (f0×score DP, 2026-05-25)`); no
+manual correction is applied. The intent is to demonstrate the
+pipeline on a non-curated speech-extreme recording, accepting that
+some boundaries will be off by hundreds of milliseconds where the
+pYIN trace is too sparse to anchor them.
+
+Callers must compute `obs_cent` and `obs_reliable` from the
+segment's pYIN output themselves (the function is audio-dependent
+but stays pure-numpy). See the alignment docstring and
+`tests/test_alignment.py` for examples.
 
 ## 6. Implementation map
 
@@ -202,7 +251,7 @@ plus the score's `duration_qn`.
 | Pitch tracking       | `sprechstimme_pitch.pitch`          | `track_pitch`                         |
 | Per-note diagnostics | `sprechstimme_pitch.pitch`          | `note_voiced_ratio`, `note_f0_iqr_cent` |
 | Reliability flag     | `sprechstimme_pitch.pitch`          | `classify_pitch_class_error`, `is_pyin_unreliable` |
-| Time alignment       | `sprechstimme_pitch.alignment`      | `recompute_times`                     |
+| Time alignment       | `sprechstimme_pitch.alignment`      | `recompute_times`, `auto_align_dtw`   |
 | Three-axis metrics   | `sprechstimme_pitch.metrics`        | `compute_three_axis_metrics`          |
 | Aggregation          | `sprechstimme_pitch.metrics`        | `aggregate_metrics`                   |
 | Classification       | `sprechstimme_pitch.metrics`        | `classify_performance`                |
@@ -241,9 +290,11 @@ What this repository **does not** reproduce:
   the code does not hard-code the value, but in practice only
   *Pierrot lunaire* No. 7 is covered. Other movements would need their
   own `score_events.csv` and `segments.csv`.
-- **No metrical alignment**: duration-weighted division is a coarse
-  approximation that breaks down for heavily rubato passages. For the
-  voice segments in this corpus the resulting per-note windows are
-  acceptable but not metrically precise.
+- **Coarse time alignment**: the default `recompute_times` is pure
+  duration-weighted division and breaks down for heavily rubato
+  passages. `auto_align_dtw` is a partial remedy that consumes the f0
+  trace; it is used for `sch-1940-sti` and recommended for any
+  speech-extreme delivery. Neither method performs true metrical
+  alignment.
 - **No portamento detection**: continuity / portamento metrics are
   outside paper 1's scope and are deferred to paper 2.

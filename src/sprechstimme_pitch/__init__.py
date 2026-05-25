@@ -15,12 +15,12 @@ Three-axis metrics:
     :func:`classify_performance`, :class:`ThreeAxisMetrics`
 
 Alignment:
-    :func:`recompute_times`
+    :func:`recompute_times`, :func:`auto_align_dtw`
 """
 
 from __future__ import annotations
 
-from .alignment import recompute_times
+from .alignment import auto_align_dtw, recompute_times
 from .metrics import (
     THRESHOLD_CONTOUR_STD,
     THRESHOLD_OFFSET_ABS_CENT,
@@ -64,4 +64,5 @@ __all__ = [
     "THRESHOLD_OFFSET_ABS_CENT",
     # alignment
     "recompute_times",
+    "auto_align_dtw",
 ]

@@ -119,27 +119,27 @@ her-1991,seg_p07_m13,13,1,62.885,63.856,full,ath-1973比例按分推定値（聴
 her-1991,seg_p07_m13,13,2,63.856,65.796,full,
 her-1991,seg_p07_m13,13,3,65.796,67.737,full,
 her-1991,seg_p07_m13,13,4,67.737,68.706,full,
-sch-1940-sti,seg_p07_m18b6_m19b5,18,3,90.042,91.747,partial,ath-1973比例按分推定値（聴取確認済み 2026-05-17）
-sch-1940-sti,seg_p07_m18b6_m19b5,19,2,91.747,92.172,partial,
-sch-1940-sti,seg_p07_m18b6_m19b5,19,3,92.172,92.599,partial,
-sch-1940-sti,seg_p07_m18b6_m19b5,19,4,92.599,93.877,partial,
-sch-1940-sti,seg_p07_m18b6_m19b5,19,5,93.877,94.304,partial,
-sch-1940-sti,seg_p07_m18b6_m19b5,19,6,94.304,94.73,partial,
-sch-1940-sti,seg_p07_m18b6_m19b5,19,7,94.73,95.156,partial,ath-1973比例按分推定値（聴取確認済み 2026-05-17）
-sch-1940-sti,seg_p07_m5,5,1,16.698,17.35,full,ath-1973比例按分推定値（聴取確認済み 2026-05-17）
-sch-1940-sti,seg_p07_m5,5,2,17.35,18.004,full,
-sch-1940-sti,seg_p07_m5,5,3,18.004,18.657,full,
-sch-1940-sti,seg_p07_m5,5,4,18.657,19.31,full,
-sch-1940-sti,seg_p07_m5,5,5,19.31,19.963,full,
-sch-1940-sti,seg_p07_m5,5,6,19.963,20.616,full,
-sch-1940-sti,seg_p07_m8,8,1,32.492,34.16,full,ath-1973比例按分推定値（聴取確認済み 2026-05-17）
-sch-1940-sti,seg_p07_m8,8,2,34.16,34.716,full,
-sch-1940-sti,seg_p07_m8,8,3,34.716,35.272,full,
-sch-1940-sti,seg_p07_m8,8,4,35.272,36.106,full,
-sch-1940-sti,seg_p07_m8,8,5,36.106,36.383,full,
-sch-1940-sti,seg_p07_m8,8,6,36.383,36.94,full,
-sch-1940-sti,seg_p07_m8,8,7,36.94,37.495,full,
-sch-1940-sti,seg_p07_m13,13,1,58.323,59.185,full,ath-1973比例按分推定値（聴取確認済み 2026-05-17）
-sch-1940-sti,seg_p07_m13,13,2,59.185,60.907,full,
-sch-1940-sti,seg_p07_m13,13,3,60.907,62.63,full,
-sch-1940-sti,seg_p07_m13,13,4,62.63,63.492,full,
+sch-1940-sti,seg_p07_m18b6_m19b5,18,3,90.042,91.615,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,2,91.615,92.01,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,3,92.01,92.439,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,4,92.439,93.717,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,5,93.717,94.181,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,6,94.181,94.645,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m18b6_m19b5,19,7,94.645,95.156,partial,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,1,16.698,17.342,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,2,17.342,18.12,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,3,18.12,18.91,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,4,18.91,19.513,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,5,19.513,20.036,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m5,5,6,20.036,20.616,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,1,32.492,34.077,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,2,34.077,34.611,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,3,34.611,35.145,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,4,35.145,35.946,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,5,35.946,36.213,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,6,36.213,36.793,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m8,8,7,36.793,37.495,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m13,13,1,58.323,59.107,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m13,13,2,59.107,60.86,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m13,13,3,60.86,62.613,full,"auto-aligned (f0×score DP, 2026-05-25)"
+sch-1940-sti,seg_p07_m13,13,4,62.613,63.492,full,"auto-aligned (f0×score DP, 2026-05-25)"
