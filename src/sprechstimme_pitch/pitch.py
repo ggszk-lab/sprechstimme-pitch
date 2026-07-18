@@ -76,7 +76,7 @@ def track_pitch(
     y: np.ndarray,
     sr: float,
     fmin: float = 130.8,  # C3
-    fmax: float = 523.3,  # C5
+    fmax: float = 1046.5,  # C6
     frame_length: int = 2048,
     hop_length: int = 256,
 ) -> PitchTrack:
