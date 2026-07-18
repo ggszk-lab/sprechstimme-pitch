@@ -12,6 +12,14 @@ per-note layer via `notebooks/02_paper_reproduction.ipynb`, the
 sensitivity layer via the two scripts in [`scripts/`](../scripts/)
 (see below). License: CC BY 4.0, same as the metadata CSVs.
 
+## Listening log
+
+[`listening_log.md`](listening_log.md) — note-by-note record of the
+aural checks reported in the companion paper: segment-window
+verification per recording, the recorded verdicts on flagged and
+kept-but-deviating notes, and the full reliability-filter flag
+inventory with pointers into the per-note CSV.
+
 ## Per-note layer
 
 ### `note_errors_all_segments.csv`
