@@ -59,7 +59,7 @@ Hand-annotated voice segments per recording.
 | `segment_id`   | str    | Stable segment label, e.g. `"seg_p07_m18b6_m19b5"` ("piece 07, m18 beat 6 to m19 beat 5"). |
 | `start_s`      | float  | Segment start in seconds (relative to the audio file's start).                             |
 | `end_s`        | float  | Segment end in seconds.                                                                    |
-| `notes`        | str    | Free-form annotation (often Japanese; describes beat positions and any rounding).          |
+| `notes`        | str    | Free-form annotation (beat positions, how the window was set, listening-check status).     |
 
 Primary key: `(recording_id, segment_id)`.
 
