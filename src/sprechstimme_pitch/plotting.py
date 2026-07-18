@@ -205,7 +205,7 @@ def plot_pca_biplot(
 
     # Plot loading vectors
     loadings = pca.components_.T * np.sqrt(pca.explained_variance_)
-    arrow_scale = 0.85 * max(np.abs(X_pca))
+    arrow_scale = 0.85 * float(np.abs(X_pca).max())
 
     for i, key in enumerate(axis_keys):
         ax.arrow(
