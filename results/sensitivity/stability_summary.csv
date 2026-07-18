@@ -1,0 +1,6 @@
+recording_id,baseline_type,n_perturbations,n_stable,stability_rate,alt_labels
+ath-1973,score-faithful,45,45,1.0,-
+hul-2012,score-faithful,45,45,1.0,-
+bou-1961,directed-recitation,45,45,1.0,-
+bou-1977,score-faithful,45,45,1.0,-
+her-1991,dynamic,45,45,1.0,-

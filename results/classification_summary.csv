@@ -1,0 +1,6 @@
+recording_id,conductor,performer,year,offset_med_cent,range_med,contour_med,contour_min,contour_std,classified_type,classification_basis,boulez_pair_role,n_segments
+ath-1973,"Atherton, David","Thomas, Mary",1973,-23.0,0.993,0.921,0.866,0.04,score-faithful,"contour_std=0.04, |offset_med|=23c (both below thresholds)",,4
+hul-2012,"Hula, Pavel","Caiello, Alda",2011,-30.0,1.112,0.883,0.8,0.054,score-faithful,"contour_std=0.05, |offset_med|=30c (both below thresholds)",,4
+bou-1961,"Boulez, Pierre","Pilarczyk, Helga",1961,-668.0,0.832,0.866,0.821,0.067,directed-recitation,|offset_med|=668c > 400c,old (Pilarczyk),4
+bou-1977,"Boulez, Pierre","Minton, Yvonne",1977,-25.0,1.037,0.956,0.866,0.05,score-faithful,"contour_std=0.05, |offset_med|=25c (both below thresholds)",new (Minton),4
+her-1991,"Herreweghe, Philippe","Pousseur, Marianne",1991,-320.0,0.807,0.474,-0.5,0.637,dynamic,contour_std=0.64 > 0.3,,4

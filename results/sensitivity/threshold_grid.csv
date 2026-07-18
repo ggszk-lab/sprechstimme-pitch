@@ -1,0 +1,10 @@
+sigma_thr,offset_thr,ath-1973,hul-2012,bou-1961,bou-1977,her-1991,is_base_cell,matches_baseline
+0.25,300.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.25,400.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.25,500.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.3,300.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.3,400.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,True,True
+0.3,500.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.35,300.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.35,400.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True
+0.35,500.0,score-faithful,score-faithful,directed-recitation,score-faithful,dynamic,False,True

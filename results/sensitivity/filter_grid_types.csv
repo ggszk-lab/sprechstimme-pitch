@@ -1,0 +1,10 @@
+voiced_threshold,iqr_threshold_cent,ath-1973,bou-1961,bou-1977,her-1991,hul-2012,same_as_baseline
+0.3,300.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.3,500.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.3,700.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.5,300.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.5,500.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.5,700.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.7,300.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.7,500.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True
+0.7,700.0,score-faithful,directed-recitation,score-faithful,dynamic,score-faithful,True

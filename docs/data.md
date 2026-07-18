@@ -4,9 +4,14 @@ This repository ships three metadata CSVs in [`data/metadata/`](../data/metadata
 and expects the user to fetch one audio file into [`data/audio/`](../data/audio/)
 via [`scripts/fetch_audio.py`](../scripts/fetch_audio.py).
 
+This document covers the *input* side. Derived outputs released with
+the companion paper (per-note estimates with exclusion reasons,
+per-segment metrics, classification summary, sensitivity analyses) are
+documented separately in [`results/README.md`](../results/README.md).
+
 License:
 
-- **Metadata CSVs**: CC BY 4.0
+- **Metadata CSVs and released results**: CC BY 4.0
 - **Code**: MIT (see [LICENSE](../LICENSE))
 - **Audio**: not bundled (see [LEGAL_NOTICE.md](../LEGAL_NOTICE.md))
 
