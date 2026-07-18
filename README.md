@@ -11,10 +11,11 @@ three axes:
 - **range** (compression) — compression / expansion of pitch span
 - **contour** (direction) — score-informed Spearman correlation of pitch shape
 
-> **Status**: Pre-release. This repository will be made public when the
-> companion paper is presented at the Fall Meeting of the Japanese Society
-> for Music Perception and Cognition (JSMPC), expected mid-November 2026.
-> Until then, please contact the author before redistributing.
+> **Status**: Released ahead of the submission of the companion paper to
+> *Music Performance Research*, whose data-and-code statement points at
+> this repository. A companion presentation at the Fall Meeting of the
+> Japanese Society for Music Perception and Cognition (JSMPC) is
+> planned for mid-November 2026.
 
 [日本語版 README](README.ja.md)
 
@@ -34,6 +35,15 @@ Open `notebooks/01_quickstart.ipynb` on Google Colab and *Run All*.
   paper figures (radar, PCA biplot, decision flow). Recordings whose
   audio is not on disk are skipped, so the notebook works on any
   available subset.
+
+## Released results
+
+[`results/`](results/README.md) ships the derived data behind the
+companion paper: per-note pitch estimates with exclusion reasons,
+per-segment three-axis metrics, the type-classification summary, the
+sensitivity analyses (regenerable via `scripts/sensitivity_e1.py` and
+`scripts/sensitivity_filter_grid.py`), and the note-by-note
+[listening log](results/listening_log.md).
 
 ## Run locally
 
@@ -63,7 +73,8 @@ See [LEGAL_NOTICE.md](LEGAL_NOTICE.md) before running the fetch script.
 
 ## Citation
 
-<!-- TODO: Add citation and BibTeX after the JSMPC Fall 2026 presentation -->
+<!-- TODO: Add citation and BibTeX once the citable identifier exists
+     (JSMPC Fall 2026 proceedings and/or the MPR article; author decision pending) -->
 
 ## License
 

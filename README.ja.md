@@ -10,7 +10,7 @@ reference implementation．
 - **range（compression）**: 楽譜上の音高変動幅に対する圧縮／拡張
 - **contour（direction）**: 楽譜の音高輪郭への追従度（score-informed Spearman）
 
-> **Status**: 公開準備中．日本音楽知覚認知学会 秋季研究発表会 2026（2026-11 中旬予測）での論文 1 発表時に public 化する予定．
+> **Status**: 論文 1 英語版の *Music Performance Research* 投稿（Data and code availability が本リポジトリを参照）に先立って公開．日本語版は日本音楽知覚認知学会 秋季研究発表会 2026（2026-11 中旬予測）で発表予定．
 
 [English README](README.md)
 
@@ -27,6 +27,13 @@ reference implementation．
   5 録音コーパスでのバッチ処理：per-segment 指標 → per-recording 集約 → 型分類，
   論文 1 主要 3 図（radar / PCA biplot / 型分類フロー）の出力．
   音源がない録音は自動でスキップされるので部分集合でも動く．
+
+## 公開データ（results/）
+
+[`results/`](results/README.md) に論文の派生データを同梱：音符単位の
+ピッチ推定値（除外理由付き）・セグメント単位 3 軸指標・型分類サマリ・
+感度分析一式（`scripts/sensitivity_e1.py` / `scripts/sensitivity_filter_grid.py`
+で再生成可能）・note-by-note の[聴取ログ](results/listening_log.md)．
 
 ## ローカルで動かす
 
@@ -53,7 +60,7 @@ EU・日本では隣接権が 2011 年に失効済み（PD 同等）．
 
 ## 引用
 
-<!-- TODO: JSMPC 秋季 2026 発表後に引用情報・BibTeX を追加 -->
+<!-- TODO: 引用可能な識別子（JSMPC 予稿 / MPR 論文）が確定し次第、引用情報・BibTeX を追加（cite 先はユーザー判断） -->
 
 ## ライセンス
 
