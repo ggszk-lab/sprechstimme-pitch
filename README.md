@@ -79,7 +79,7 @@ published, please cite this repository directly
 
 ```bibtex
 @software{suzuki2026sprechstimmepitch,
-  author  = {Suzuki, Gen},
+  author  = {Suzuki, Gengo},
   title   = {sprechstimme-pitch: quantitative three-axis analysis of
              Sprechstimme pitch in Pierrot lunaire No.~7},
   year    = {2026},

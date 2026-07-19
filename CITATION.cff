@@ -8,7 +8,7 @@ type: software
 title: "sprechstimme-pitch: quantitative three-axis analysis of Sprechstimme pitch in Pierrot lunaire No. 7"
 authors:
   - family-names: Suzuki
-    given-names: Gen
+    given-names: Gengo
 repository-code: "https://github.com/ggszk-lab/sprechstimme-pitch"
 license: MIT
 version: 0.1.0
