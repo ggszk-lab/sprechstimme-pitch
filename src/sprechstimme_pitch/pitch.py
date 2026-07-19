@@ -31,6 +31,8 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import stats
 
+from . import config
+
 __all__ = [
     "PitchTrack",
     "track_pitch",
@@ -75,10 +77,10 @@ class PitchTrack:
 def track_pitch(
     y: np.ndarray,
     sr: float,
-    fmin: float = 130.8,  # C3
-    fmax: float = 1046.5,  # C6
-    frame_length: int = 2048,
-    hop_length: int = 256,
+    fmin: float = config.FMIN_HZ,
+    fmax: float = config.FMAX_HZ,
+    frame_length: int = config.FRAME_LENGTH,
+    hop_length: int = config.HOP_LENGTH,
 ) -> PitchTrack:
     """Run ``librosa.pyin`` and wrap the output.
 

@@ -19,8 +19,14 @@ jobs:
       - name: Set up Python
         run: uv python install ${{ matrix.python-version }}
       - name: Install dependencies
-        run: uv sync --extra dev
+        run: uv sync --extra dev --extra notebook
       - name: Lint
         run: uv run ruff check .
       - name: Run tests
         run: uv run pytest -q
+      # Executes without audio: recordings are skipped, but the metadata
+      # asserts and every code path up to the empty-run guards must pass.
+      - name: Execute paper-reproduction notebook (no-audio mode)
+        run: >
+          uv run jupyter nbconvert --to notebook --execute --stdout
+          notebooks/02_paper_reproduction.ipynb > /dev/null

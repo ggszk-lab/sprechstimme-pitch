@@ -16,10 +16,16 @@ Three-axis metrics:
 
 Alignment:
     :func:`recompute_times`, :func:`auto_align_dtw`
+
+Batch pipeline (audio + metadata -> metrics):
+    :func:`analyse_segment`, :func:`analyse_recording`
+
+Configuration constants live in :mod:`sprechstimme_pitch.config`.
 """
 
 from __future__ import annotations
 
+from . import config
 from .alignment import auto_align_dtw, recompute_times
 from .metrics import (
     THRESHOLD_CONTOUR_STD,
@@ -29,6 +35,7 @@ from .metrics import (
     classify_performance,
     compute_three_axis_metrics,
 )
+from .pipeline import analyse_recording, analyse_segment
 from .pitch import (
     F0_IQR_THRESHOLD_CENT,
     PITCH_CLASS_ERROR_TOL_CENT,
@@ -45,6 +52,11 @@ __version__ = "0.1.0"
 
 __all__ = [
     "__version__",
+    # config
+    "config",
+    # pipeline
+    "analyse_segment",
+    "analyse_recording",
     # pitch
     "PitchTrack",
     "track_pitch",
