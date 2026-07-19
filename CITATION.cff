@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software or the released data, please cite the
+  repository as below. The companion journal article is under
+  submission; this entry will be updated with the article reference
+  once it is published.
+type: software
+title: "sprechstimme-pitch: quantitative three-axis analysis of Sprechstimme pitch in Pierrot lunaire No. 7"
+authors:
+  - family-names: Suzuki
+    given-names: Gen
+repository-code: "https://github.com/ggszk-lab/sprechstimme-pitch"
+license: MIT
+version: 0.1.0
+date-released: "2026-07-19"

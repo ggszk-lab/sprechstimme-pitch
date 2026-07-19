@@ -73,8 +73,25 @@ See [LEGAL_NOTICE.md](LEGAL_NOTICE.md) before running the fetch script.
 
 ## Citation
 
-<!-- TODO: Add citation and BibTeX once the citable identifier exists
-     (JSMPC Fall 2026 proceedings and/or the MPR article; author decision pending) -->
+The companion journal article is under submission. Until it is
+published, please cite this repository directly
+(see also [CITATION.cff](CITATION.cff)):
+
+```bibtex
+@software{suzuki2026sprechstimmepitch,
+  author  = {Suzuki, Gen},
+  title   = {sprechstimme-pitch: quantitative three-axis analysis of
+             Sprechstimme pitch in Pierrot lunaire No.~7},
+  year    = {2026},
+  url     = {https://github.com/ggszk-lab/sprechstimme-pitch},
+  version = {0.1.0},
+  note    = {Reference implementation and released data for the
+             companion paper (under submission)}
+}
+```
+
+<!-- TODO: replace with the article citation once the MPR paper (or the
+     JSMPC Fall 2026 proceedings paper) is published -->
 
 ## License
 

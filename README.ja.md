@@ -60,7 +60,10 @@ EU・日本では隣接権が 2011 年に失効済み（PD 同等）．
 
 ## 引用
 
-<!-- TODO: 引用可能な識別子（JSMPC 予稿 / MPR 論文）が確定し次第、引用情報・BibTeX を追加（cite 先はユーザー判断） -->
+対応する論文誌論文は投稿中です．刊行までは本リポジトリ自体を引用してください
+（BibTeX は [英語版 README](README.md#citation) / [CITATION.cff](CITATION.cff) を参照）．
+
+<!-- TODO: MPR 論文（または JSMPC 秋季 2026 予稿）刊行後に論文引用へ差し替え -->
 
 ## ライセンス
 
