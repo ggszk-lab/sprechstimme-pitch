@@ -97,11 +97,11 @@ their verdicts are given below.
 | hul-2012 | m8.2 | C♯5 | −1220 | subharmonic (oct_1) | **checked — lock, excluded** (Section 2) |
 | hul-2012 | m8.3 | C5 | −10 | iqr_high | — |
 | hul-2012 | m19.2 | B4 | −60 | iqr_high | — |
-| bou-1961 | m5.4 | G♯4 | −700 | subharmonic (fifth_down) | TODO: author verdict before release |
-| bou-1961 | m8.1 | C5 | −720 | subharmonic (fifth_down) | TODO: author verdict before release |
-| bou-1961 | m8.2 | C♯5 | −680 | subharmonic (fifth_down) | TODO: author verdict before release |
-| bou-1961 | m8.3 | C5 | −745 | subharmonic (fifth_down) | TODO: author verdict before release |
-| bou-1961 | m19.4 | C5 | −680 | subharmonic (fifth_down) | TODO: author verdict before release |
+| bou-1961 | m5.4 | G♯4 | −700 | subharmonic (fifth_down) | **checked — sung low** (see below) |
+| bou-1961 | m8.1 | C5 | −720 | subharmonic (fifth_down) | **checked — sung low** (see below) |
+| bou-1961 | m8.2 | C♯5 | −680 | subharmonic (fifth_down) | **checked — sung low** (see below) |
+| bou-1961 | m8.3 | C5 | −745 | subharmonic (fifth_down) | **checked — sung low** (see below) |
+| bou-1961 | m19.4 | C5 | −680 | subharmonic (fifth_down) | **checked — sung low** (see below) |
 | her-1991 | m5.5 | B4 | −540 | iqr_high | — |
 | her-1991 | m8.1 | C5 | −620 | iqr_high | — |
 | her-1991 | m8.2 | C♯5 | (no estimate) | voiced_low | — |
@@ -109,18 +109,25 @@ their verdicts are given below.
 | her-1991 | m19.3 | G♯4 | +380 | voiced_low, iqr_high | — |
 | her-1991 | m19.5 | B4 | −1480 | iqr_high | — |
 
-Context for the bou-1961 fifth-down flags: Pilarczyk recites about
-6.7 semitones below the score throughout (offset −668 cents), so a
-fifth-subharmonic lock and her actual register sit close together.
-Independent of the per-note verdicts, the kept bou-1961 notes
-reproduce the notated direction profile (e.g. m5's down-up-up-up-down
-exactly, voiced 1.0, tight IQR), which a stable lock or flute leakage
-would not produce; see the paper's pipeline section.
+**bou-1961 fifth-down flags (author check, 2026-07-19, note-level
+Reaper regions against the Wergo issue):** at all five flagged notes
+the voice is audibly *low* — the delivery sits in the same low region
+as the estimates, consistent with the recording's overall offset of
+−668 cents. The exact pitch is hard to discern in places (low
+chest-voice recitation, 1961 source), so a cent-level confirmation of
+the estimates is not claimed. Verdict: these are **not** confirmed
+tracking locks; the score-referencing criterion here conservatively
+excludes plausibly genuine low pitches. The exclusions are retained by
+design (the filter is an operational definition), and they do not
+affect the results: retaining the notes would only reinforce the
+measured offset, and the classification is stable across the filter
+grid (`sensitivity/filter_grid_types.csv`). Independent of the
+per-note verdicts, the kept bou-1961 notes reproduce the notated
+direction profile (e.g. m5's down-up-up-up-down exactly, voiced 1.0,
+tight IQR), which a stable lock or flute leakage would not produce.
 
 ## 4. Known gaps
 
-- The five bou-1961 fifth-down verdicts above are marked TODO until
-  the author's per-note confirmation is transcribed here.
 - her-1991 m13 (contour correlation 0.00) has not been individually
   listening-checked; the dynamic classification does not depend on it.
 - The note-level subdivision of the ath-1973 / hul-2012 pilot segment
