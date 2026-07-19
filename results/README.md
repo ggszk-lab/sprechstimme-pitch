@@ -20,6 +20,18 @@ verification per recording, the recorded verdicts on flagged and
 kept-but-deviating notes, and the full reliability-filter flag
 inventory with pointers into the per-note CSV.
 
+## Separation-quality layer
+
+### `flute_leakage_m10_m11.csv`
+
+One row per recording: the separation-quality measurement reported in
+the paper (Method, source separation). On the flute-only passage
+mm. 10-11 (`seg_p07_m10_m11`), `rms_ratio_vocals_over_orig` is the
+ratio of RMS amplitudes between the separated vocals stem and the
+original mix — the residual flute leakage (0.5% for ath-1973 and
+hul-2012 up to 7.2% for bou-1961). Exported from the (private)
+analysis repository like the per-note layer.
+
 ## Per-note layer
 
 ### `note_errors_all_segments.csv`
@@ -83,3 +95,4 @@ python scripts/sensitivity_filter_grid.py  # needs scipy (installed via uv sync)
 | `E1_sensitivity_summary.md` | `sensitivity_e1.py` | human-readable summary of the above |
 | `filter_grid_types.csv` | `sensitivity_filter_grid.py` | reliability-filter thresholds grid, voiced x IQR 3x3 (all cells reproduce the baseline types) |
 | `sign_agreement.csv` | `sensitivity_filter_grid.py` | per-segment direction agreement of kept adjacent intervals (complement to rank-based contour) |
+| `pyin_unreliability_sensitivity.csv` | exported from the private analysis repository | flagged-note counts over the same voiced x IQR 3x3 filter grid (n_flagged 13-24 of 120; the paper's "13 to 24" figure) plus MAE summaries |

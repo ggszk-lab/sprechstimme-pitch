@@ -122,9 +122,11 @@ design (the filter is an operational definition), and they do not
 affect the results: retaining the notes would only reinforce the
 measured offset, and the classification is stable across the filter
 grid (`sensitivity/filter_grid_types.csv`). Independent of the
-per-note verdicts, the kept bou-1961 notes reproduce the notated
-direction profile (e.g. m5's down-up-up-up-down exactly, voiced 1.0,
-tight IQR), which a stable lock or flute leakage would not produce.
+per-note verdicts, the bou-1961 note estimates reproduce the notated
+direction profile (on m5, all six note medians — including the flagged
+G#4 — follow down-up-up-up-down, with per-note voiced ratios of
+0.86–1.00 and within-note IQRs of 40–360 cents), which a stable lock
+or flute leakage would not produce.
 
 ## 4. Known gaps
 
