@@ -85,7 +85,7 @@ published, please cite this repository directly
              Sprechstimme pitch in Pierrot lunaire No.~7},
   year    = {2026},
   url     = {https://github.com/ggszk-lab/sprechstimme-pitch},
-  version = {0.1.0},
+  version = {1.0.0},
   note    = {Reference implementation and released data for the
              companion paper (under submission)}
 }

@@ -11,5 +11,5 @@ authors:
     given-names: Gengo
 repository-code: "https://github.com/ggszk-lab/sprechstimme-pitch"
 license: MIT
-version: 0.1.0
-date-released: "2026-07-19"
+version: 1.0.0
+date-released: "2026-08-08"
