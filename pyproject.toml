@@ -1,6 +1,6 @@
 [project]
 name = "sprechstimme-pitch"
-version = "0.1.0"
+version = "1.0.0"
 description = "Three-axis (register/range/contour) analysis of Sprechstimme in Schoenberg's Pierrot lunaire op.21"
 readme = "README.md"
 requires-python = ">=3.12"
