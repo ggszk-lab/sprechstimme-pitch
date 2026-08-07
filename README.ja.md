@@ -10,13 +10,14 @@ reference implementation．
 - **range（compression）**: 楽譜上の音高変動幅に対する圧縮／拡張
 - **contour（direction）**: 楽譜の音高輪郭への追従度（score-informed Spearman）
 
-> **Status**: 論文 1 英語版の *Music Performance Research* 投稿（Data and code availability が本リポジトリを参照）に先立って公開．日本語版は日本音楽知覚認知学会 秋季研究発表会 2026（2026-11 中旬予測）で発表予定．
+> **Status**: 論文 1 英語版の *Music Performance Research* 投稿（Data and code availability が本リポジトリを参照）に先立って公開．日本語版は日本音楽知覚認知学会 秋季研究発表会 2026（2026-10-31〜11-01）で発表予定．
 
 [English README](README.md)
 
 ## 5 分で試す（Colab）
 
-<!-- TODO: 公開後に Colab badge を追加 -->
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk-lab/sprechstimme-pitch/blob/main/notebooks/01_quickstart.ipynb)
+
 `notebooks/01_quickstart.ipynb` を Colab で開いて Run All．
 
 ## ノートブック

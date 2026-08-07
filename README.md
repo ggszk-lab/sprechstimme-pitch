@@ -15,13 +15,14 @@ three axes:
 > *Music Performance Research*, whose data-and-code statement points at
 > this repository. A companion presentation at the Fall Meeting of the
 > Japanese Society for Music Perception and Cognition (JSMPC) is
-> planned for mid-November 2026.
+> scheduled for 31 October--1 November 2026.
 
 [日本語版 README](README.ja.md)
 
 ## Try it on Colab (5 min)
 
-<!-- TODO: Add Colab badge after public release -->
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk-lab/sprechstimme-pitch/blob/main/notebooks/01_quickstart.ipynb)
+
 Open `notebooks/01_quickstart.ipynb` on Google Colab and *Run All*.
 
 ## Notebooks
