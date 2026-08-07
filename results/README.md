@@ -99,8 +99,10 @@ Robustness checks reported in the companion paper (Section on
 sensitivity analysis and the appendix). Regenerate with:
 
 ```bash
-python scripts/sensitivity_e1.py           # stdlib only
-python scripts/sensitivity_filter_grid.py  # needs scipy (installed via uv sync)
+python scripts/sensitivity_e1.py                  # stdlib only
+python scripts/sensitivity_filter_grid.py         # needs scipy (installed via uv sync)
+python scripts/sensitivity_contour_convention.py  # stdlib only
+python scripts/sensitivity_pyin_perturbation.py   # needs audio under data/audio/
 ```
 
 | file | produced by | content |
@@ -113,3 +115,7 @@ python scripts/sensitivity_filter_grid.py  # needs scipy (installed via uv sync)
 | `filter_grid_types.csv` | `sensitivity_filter_grid.py` | reliability-filter thresholds grid, voiced x IQR 3x3 (all cells reproduce the baseline types) |
 | `sign_agreement.csv` | `sensitivity_filter_grid.py` | per-segment direction agreement of kept adjacent intervals (complement to rank-based contour) |
 | `pyin_unreliability_sensitivity.csv` | exported from the private analysis repository | flagged-note counts over the same voiced x IQR 3x3 filter grid (n_flagged 13-24 of 120; the paper's "13 to 24" figure) plus MAE summaries |
+| `contour_convention.csv` | `sensitivity_contour_convention.py` | per-segment contour rho under the published bridging convention vs. a strict-adjacency convention (no interval across a filtered-out note) |
+| `contour_convention_summary.csv` | `sensitivity_contour_convention.py` | per-recording sigma_contour and classification under both conventions (all five types stable; the strict convention drops the aurally verified her-1991 inversion segment to a single interval) |
+| `pyin_perturbation_grid.csv` | `sensitivity_pyin_perturbation.py` | classification under a frame x hop 3x3 pYIN grid plus onset shifts (+-20/50 ms) and per-note jitter (+-30 ms, 3 seeds): 16 configs x 5 recordings, all types stable (needs user-supplied audio) |
+| `pyin_perturbation_segments.csv` | `sensitivity_pyin_perturbation.py` | per-segment three-axis values for every perturbation configuration |

@@ -1,0 +1,6 @@
+recording_id,offset_median_abs,contour_std_bridging,contour_std_strict,contour_median_bridging,contour_median_strict,type_bridging,type_strict,type_flip
+ath-1973,22.5,0.0399,0.0399,0.9206,0.9206,score-faithful,score-faithful,stable
+hul-2012,30.0,0.0541,0.0727,0.8830,0.8660,score-faithful,score-faithful,stable
+bou-1961,667.5,0.0671,0.1323,0.8660,0.8660,directed-recitation,directed-recitation,stable
+bou-1977,25.0,0.0499,0.0499,0.9561,0.9561,score-faithful,score-faithful,stable
+her-1991,320.0,0.6374,0.4598,0.4743,0.9487,dynamic,dynamic,stable
