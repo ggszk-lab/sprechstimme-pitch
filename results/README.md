@@ -76,6 +76,23 @@ One row per recording: aggregated axes (`offset_med_cent`, `range_med`,
 (score-faithful / directed-recitation / dynamic), and the
 `classification_basis` string spelling out which thresholds decided it.
 
+## PCA layer (`pca/`)
+
+The auxiliary PCA reported in the companion paper (Results, axis
+non-redundancy; the biplot figure): PCA over the four normalized
+deviation quantities (the three axes plus sigma_contour), n=5.
+Regenerate with:
+
+```bash
+python scripts/export_pca.py  # needs numpy + scikit-learn (installed via uv sync)
+```
+
+| file | content |
+|---|---|
+| `pca/pca_explained_variance.csv` | eigenvalue, variance ratio, cumulative per PC (PC1 72.1%, PC2 24.6%) |
+| `pca/pca_loadings.csv` | raw component vectors and the sqrt(eigenvalue)-scaled loadings drawn as biplot arrows |
+| `pca/pca_scores.csv` | PC1/PC2 coordinates of the five recordings |
+
 ## Sensitivity layer (`sensitivity/`)
 
 Robustness checks reported in the companion paper (Section on

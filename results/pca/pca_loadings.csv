@@ -1,0 +1,5 @@
+quantity,component_PC1,component_PC2,scaled_loading_PC1,scaled_loading_PC2
+abs_offset,0.373701,0.754487,0.709352,0.836875
+range_dev,0.539141,0.292461,1.023388,0.324397
+contour_dev,0.546576,-0.368635,1.037500,-0.408889
+contour_std,0.520508,-0.457521,0.988018,-0.507481
